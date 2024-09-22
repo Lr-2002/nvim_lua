@@ -2,20 +2,27 @@
 local vim = vim 
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
-
+Plug('stevearc/aerial.nvim')
 Plug('ibhagwan/fzf-lua', {['branch']= 'main'})
+Plug('https://github.com/kshenoy/vim-signature.git')
 Plug('nvim-tree/nvim-web-devicons')
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-tree/nvim-web-devicons')
+Plug('MunifTanjim/nui.nvim')
+Plug('nvim-neo-tree/neo-tree.nvim', { ['branch']= 'v3.x' })
 Plug('~/fzf')
 Plug("kylechui/nvim-surround")
 Plug('mfussenegger/nvim-dap')
 Plug('mfussenegger/nvim-dap-python')
+Plug('rcarriga/nvim-dap-ui')
+Plug('nvim-neotest/nvim-nio')
 Plug('terryma/vim-multiple-cursors')
 Plug('nvim-treesitter/nvim-treesitter', {['do']= 'TSUpdate'})
 Plug('https://github.com/junegunn/vim-easy-align.git')
 Plug('kristijanhusak/vim-hybrid-material')
 Plug('junegunn/seoul256.vim')
-Plug('preservim/nerdtree')
 Plug('neoclide/coc.nvim', {['branch'] ='release'})
+Plug('https://github.com/ggandor/leap.nvim.git')
 vim.call('plug#end')
 vim.cmd('silent! colorscheme hybrid_material')
 -- Some servers have issues with backup files, see #649
@@ -23,11 +30,20 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.wo.number = true
 vim.wo.relativenumber =true
+-- require('leap').create_default_mappings()
 require('fzf-lua').setup { 
 	fzf_bin = '~/fzf'
 
-}
-require("dap-python").setup("python")
+} 
+
+
+-- mapping part 
+-- Map Ctrl + h/j/k/l for navigating between windows
+vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dt', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
@@ -36,17 +52,52 @@ vim.api.nvim_set_keymap('n', 'do', "<cmd>lua require('dap').step_over()<CR>", { 
 vim.api.nvim_set_keymap('n', 'di', "<cmd>lua require('dap').step_into()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'oe', "<cmd>lua require('dap').repl.open()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'ce', "<cmd>lua require('dap').repl.close()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'cd', "<cmd>lua require('dap').terminate()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'rd', "<cmd>lua require('dap').restart()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'fi', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
+
+vim.keymap.set('n', '<C-Up>', ':resize -2<CR>', opts)
+vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', opts)
+vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', opts)
+vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', opts)
+
+-----------------
+-- Visual mode --
+-----------------
+require('aerial').setup({
+  -- 配置是否自动打开 aerial 窗口
+  on_attach = function(bufnr)
+    -- 使用 <leader>a 打开或关闭 aerial 窗口
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'os', '<cmd>AerialToggle!<CR>', {})
+  end
+})
+
+-- Hint: start visual mode with the same area as the previous area and the same mode
+vim.keymap.set('v', '<', '<gv', opts)
+vim.keymap.set('v', '>', '>gv', opts)
+
+vim.api.nvim_set_keymap('n', 'ou', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'nhl', "<cmd>nohlsearch<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'lj', ":buffer ", { noremap = true, silent = false })
+
+
+
+
 vim.api.nvim_set_keymap('n', 'ot', "<cmd>NERDTree<CR>", { noremap = true, silent = true })
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
 vim.opt.updatetime = 300
 
--- Always show the signcolumn, otherwise it would shift the text each time
+-- Always show the signcolumn, otherwise it w:uld shift the text each time
 -- diagnostics appeared/became resolved
 vim.opt.signcolumn = "yes"
-
+vim.o.cursorline=true
+vim.o.cursorcolumn=true
+vim.o.showmatch=true
 local keyset = vim.keymap.set
 -- Autocomplete
 function _G.check_back_space()
@@ -219,3 +270,49 @@ keyset("n", "<space>j", ":<C-u>CocNext<cr>", opts)
 keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
 -- Resume latest coc list
 keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
+
+
+dap = require('dap')
+dap_python = require('dap-python')
+dap.set_log_level('TRACE')
+dap_python.setup(os.getenv("CONDA_PREFIX") .. '/bin/python')
+dap.configurations.python = {
+  {
+    type = 'python',
+    request = 'launch',
+    name = "Launch file for debug xianhao file ",
+    program = "/scratch2/mas/zhouziheng/ABC-s/train/generate_slot_with_mask/dynamicrafter/train_abstractNet_video_slot_with_mask_flatten_dynamicrafter_fourier_pos_emb_xianhao.py",
+    pythonPath = function()
+      return os.getenv("CONDA_PREFIX") .. '/bin/python'
+    end,
+    args = {
+      "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
+      "--dataset_type", "movi",
+      "--movi_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/movi/movi_c/train/image/**/*.npy",
+      "--decoder_config", "/scratch2/mas/zhouziheng/ABC-s/abstraction_model/generate_slot_with_mask_input/dynamicrafter/configs/training_512_v1.0/config_img.yaml",
+      "--decoder_ckpt_path", "/scratch2/mas/zhouziheng/DynamiCrafter/checkpoints/dynamicrafter_512_v1/model.ckpt",
+      "--image_mode", "False",
+      "--training_mode", "True",
+      "--model_cache_dir", "/scratch2/mas/zhouziheng/.cache",
+      "--bdd_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/bdd100k/image",
+      "--use_dp", "False",
+      "--num_workers", "48",
+      "--batch_size", "4",
+      "--backward_batch_size", "4",
+      "--use_ref", "False",
+      "--slot_size", "1024",
+      "--enable_wandb", "False",
+      "--slot_method", "mask_init",
+
+      -- 可选的其他参数
+    },
+  },
+}
+
+require('dapui').setup()
+
+vim.fn.sign_define('DapBreakpoint', {text='🐞', texthl='', linehl='', numhl=''})
+
+vim.o.ignorecase = true 
+vim.opt.shell = "/bin/zsh"
+-- load lua 
