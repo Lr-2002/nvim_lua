@@ -4,6 +4,7 @@ local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 Plug('stevearc/aerial.nvim')
 Plug('ibhagwan/fzf-lua', {['branch']= 'main'})
+Plug('https://github.com/folke/todo-comments.nvim.git')
 Plug('https://github.com/kshenoy/vim-signature.git')
 Plug('nvim-tree/nvim-web-devicons')
 Plug('nvim-lua/plenary.nvim')
@@ -43,7 +44,11 @@ vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'H', '^', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'L', '$', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'bd', '<C-o>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', 'jj', '<C-\\><C-n>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dt', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
@@ -280,10 +285,12 @@ dap.configurations.python = {
   {
     type = 'python',
     request = 'launch',
-    name = "Launch file for debug xianhao file ",
-    program = "/scratch2/mas/zhouziheng/ABC-s/train/generate_slot_with_mask/dynamicrafter/train_abstractNet_video_slot_with_mask_flatten_dynamicrafter_fourier_pos_emb_xianhao.py",
+    name = "Launch debug ",
+    -- program = "${file}",
+    program = "/scratch2/mas/zhouziheng/ABC-s/train/generate_slot_with_mask/dynamicrafter/train_abstractNet_video_slot_with_mask_flatten_dynamicrafter_fourier_pos_emb_xianhao_for_sweep.py",
     pythonPath = function()
-      return os.getenv("CONDA_PREFIX") .. '/bin/python'
+      return "/scratch2/mas/zhouziheng/miniconda3/envs/dynamicrafter/bin/python"
+
     end,
     args = {
       "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
@@ -295,15 +302,16 @@ dap.configurations.python = {
       "--training_mode", "True",
       "--model_cache_dir", "/scratch2/mas/zhouziheng/.cache",
       "--bdd_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/bdd100k/image",
+      "--lt_data_path", "/home/zhouziheng/scratch2_zzh/processed_lt_data",
       "--use_dp", "False",
-      "--num_workers", "48",
-      "--batch_size", "4",
-      "--backward_batch_size", "4",
-      "--use_ref", "False",
+      "--num_workers", "24",
+      "--batch_size", "1",
+      "--backward_batch_size", "1",
+      "--use_ref", "True",
       "--slot_size", "1024",
       "--enable_wandb", "False",
-      "--slot_method", "mask_init",
-
+      "--slot_method", "slot_query",
+      "--which_backbone", "pretrain_dino",
       -- 可选的其他参数
     },
   },
@@ -315,4 +323,6 @@ vim.fn.sign_define('DapBreakpoint', {text='🐞', texthl='', linehl='', numhl=''
 
 vim.o.ignorecase = true 
 vim.opt.shell = "/bin/zsh"
+vim.opt.backupdir = "~/.config/nvim/.backup//"
+vim.opt.undodir = "~/.config/nvim/.undodir//"
 -- load lua 
