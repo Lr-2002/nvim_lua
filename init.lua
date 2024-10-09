@@ -6,12 +6,15 @@ Plug('stevearc/aerial.nvim')
 Plug('ibhagwan/fzf-lua', {['branch']= 'main'})
 Plug('https://github.com/folke/todo-comments.nvim.git')
 Plug('https://github.com/kshenoy/vim-signature.git')
-Plug('nvim-tree/nvim-web-devicons')
-Plug('nvim-lua/plenary.nvim')
-Plug('nvim-tree/nvim-web-devicons')
-Plug('MunifTanjim/nui.nvim')
 Plug('nvim-neo-tree/neo-tree.nvim', { ['branch']= 'v3.x' })
+Plug("nvim-lua/plenary.nvim")
+Plug("nvim-tree/nvim-web-devicons") -- not strictly required, but recommended
+Plug("MunifTanjim/nui.nvim")
+Plug("terrortylor/nvim-comment")
+Plug('blueyed/jedi-vim',  {['branch']= 'call-signatures'})
 Plug('~/fzf')
+Plug('vim-airline/vim-airline')
+Plug('vim-airline/vim-airline-themes')
 Plug("kylechui/nvim-surround")
 Plug('mfussenegger/nvim-dap')
 Plug('mfussenegger/nvim-dap-python')
@@ -27,8 +30,10 @@ Plug('https://github.com/ggandor/leap.nvim.git')
 vim.call('plug#end')
 vim.cmd('silent! colorscheme hybrid_material')
 -- Some servers have issues with backup files, see #649
-vim.opt.backup = false
-vim.opt.writebackup = false
+vim.opt.backup = true
+vim.opt.writebackup = true
+vim.opt.sessionoptions:append("localoptions")
+vim.treesitter.language.register('python', 'someft')
 vim.wo.number = true
 vim.wo.relativenumber =true
 -- require('leap').create_default_mappings()
@@ -38,6 +43,12 @@ require('fzf-lua').setup {
 } 
 
 
+-- 设置 vim-airline
+
+-- 自定义状态栏
+
+
+-- vim.api.nvim_set_keymap('v', '<C-/>', 'gc', {noremap=true})
 -- mapping part 
 -- Map Ctrl + h/j/k/l for navigating between windows
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
@@ -50,6 +61,8 @@ vim.api.nvim_set_keymap('n', 'bd', '<C-o>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', 'jj', '<C-\\><C-n>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-x>", "<cmd>split<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-v>", "<cmd>vsplit<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dt', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dc', "<cmd>lua require('dap').continue()<CR>", { noremap = true, silent = true })
@@ -59,7 +72,8 @@ vim.api.nvim_set_keymap('n', 'oe', "<cmd>lua require('dap').repl.open()<CR>", { 
 vim.api.nvim_set_keymap('n', 'ce', "<cmd>lua require('dap').repl.close()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'cd', "<cmd>lua require('dap').terminate()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'rd', "<cmd>lua require('dap').restart()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'fi', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'zi', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'lb', "<cmd>lua require('fzf-lua').buffers()<CR>", { noremap = true, silent = true })
 
 vim.keymap.set('n', '<C-Up>', ':resize -2<CR>', opts)
 vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', opts)
@@ -84,7 +98,9 @@ vim.keymap.set('v', '>', '>gv', opts)
 vim.api.nvim_set_keymap('n', 'ou', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'ls', "<cmd>Neotree<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'la', ":Neotree position=current<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'nhl', "<cmd>nohlsearch<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'lj', ":buffer ", { noremap = true, silent = false })
 
@@ -95,7 +111,7 @@ vim.api.nvim_set_keymap('n', 'ot', "<cmd>NERDTree<CR>", { noremap = true, silent
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
-vim.opt.updatetime = 300
+vim.opt.updatetime = 100
 
 -- Always show the signcolumn, otherwise it w:uld shift the text each time
 -- diagnostics appeared/became resolved
@@ -253,7 +269,7 @@ vim.api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'edito
 -- Add (Neo)Vim's native statusline support
 -- NOTE: Please see `:h coc-status` for integrations with external plugins that
 -- provide custom statusline: lightline.vim, vim-airline
-vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function','')}")
+--
 
 -- Mappings for CoCList
 -- code actions and coc stuff
@@ -293,27 +309,30 @@ dap.configurations.python = {
 
     end,
     args = {
-      "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
-      "--dataset_type", "movi",
-      "--movi_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/movi/movi_c/train/image/**/*.npy",
-      "--decoder_config", "/scratch2/mas/zhouziheng/ABC-s/abstraction_model/generate_slot_with_mask_input/dynamicrafter/configs/training_512_v1.0/config_img.yaml",
-      "--decoder_ckpt_path", "/scratch2/mas/zhouziheng/DynamiCrafter/checkpoints/dynamicrafter_512_v1/model.ckpt",
-      "--image_mode", "False",
-      "--training_mode", "True",
-      "--model_cache_dir", "/scratch2/mas/zhouziheng/.cache",
-      "--bdd_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/bdd100k/image",
-      "--lt_data_path", "/home/zhouziheng/scratch2_zzh/processed_lt_data",
-      "--use_dp", "False",
-      "--num_workers", "24",
-      "--batch_size", "1",
-      "--backward_batch_size", "1",
-      "--use_ref", "True",
-      "--slot_size", "1024",
-      "--enable_wandb", "False",
-      "--slot_method", "slot_query",
-      "--which_backbone", "pretrain_dino",
-      -- 可选的其他参数
-    },
+	"--wandb_config", "/scratch2/mas/zhouziheng/ABC-s/test_wandb.yaml"
+    }
+    -- args = {
+    --   "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
+    --   "--dataset_type", "movi",
+    --   "--movi_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/movi/movi_c/train/image/**/*.npy",
+    --   "--decoder_config", "/scratch2/mas/zhouziheng/ABC-s/abstraction_model/generate_slot_with_mask_input/dynamicrafter/configs/training_512_v1.0/config_img.yaml",
+    --   "--decoder_ckpt_path", "/scratch2/mas/zhouziheng/DynamiCrafter/checkpoints/dynamicrafter_512_v1/model.ckpt",
+    --   "--image_mode", "False",
+    --   "--training_mode", "True",
+    --   "--model_cache_dir", "/scratch2/mas/zhouziheng/.cache",
+    --   "--bdd_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/bdd100k/image",
+    --   "--lt_data_path", "/home/zhouziheng/scratch2_zzh/processed_lt_data",
+    --   "--use_dp", "False",
+    --   "--num_workers", "24",
+    --   "--batch_size", "1",
+    --   "--backward_batch_size", "1",
+    --   "--use_ref", "True",
+    --   "--slot_size", "1024",
+    --   "--enable_wandb", "False",
+    --   "--slot_method", "slot_query",
+    --   "--which_backbone", "pretrain_dino",
+    --   -- 可选的其他参数
+    -- },
   },
 }
 
@@ -326,3 +345,7 @@ vim.opt.shell = "/bin/zsh"
 vim.opt.backupdir = "~/.config/nvim/.backup//"
 vim.opt.undodir = "~/.config/nvim/.undodir//"
 -- load lua 
+--
+--
+-- save session and load 
+vim.cmd([[autocmd VimLeave * mksession! ~/.nvim_session]])
