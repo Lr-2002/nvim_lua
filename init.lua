@@ -1,9 +1,15 @@
 -- https://raw.githubusercontent.com/neoclide/coc.nvim/master/doc/coc-example-config.lua
+--
 local vim = vim 
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
+Plug('https://github.com/folke/which-key.nvim.git')
+Plug('https://github.com/echasnovski/mini.icons.git')
+Plug('https://github.com/rose-pine/neovim.git')
 Plug('stevearc/aerial.nvim')
 Plug('ibhagwan/fzf-lua', {['branch']= 'main'})
+Plug('nvim-lua/plenary.nvim')
+Plug('nvim-telescope/telescope.nvim', { ['tag']= '0.1.8' })
 Plug('https://github.com/folke/todo-comments.nvim.git')
 Plug('https://github.com/kshenoy/vim-signature.git')
 Plug('nvim-neo-tree/neo-tree.nvim', { ['branch']= 'v3.x' })
@@ -11,7 +17,6 @@ Plug("nvim-lua/plenary.nvim")
 Plug("nvim-tree/nvim-web-devicons") -- not strictly required, but recommended
 Plug("MunifTanjim/nui.nvim")
 Plug("terrortylor/nvim-comment")
-Plug('blueyed/jedi-vim',  {['branch']= 'call-signatures'})
 Plug('~/fzf')
 Plug('vim-airline/vim-airline')
 Plug('vim-airline/vim-airline-themes')
@@ -20,6 +25,7 @@ Plug('mfussenegger/nvim-dap')
 Plug('mfussenegger/nvim-dap-python')
 Plug('rcarriga/nvim-dap-ui')
 Plug('nvim-neotest/nvim-nio')
+Plug('phaazon/hop.nvim')
 Plug('terryma/vim-multiple-cursors')
 Plug('nvim-treesitter/nvim-treesitter', {['do']= 'TSUpdate'})
 Plug('https://github.com/junegunn/vim-easy-align.git')
@@ -28,20 +34,23 @@ Plug('junegunn/seoul256.vim')
 Plug('neoclide/coc.nvim', {['branch'] ='release'})
 Plug('https://github.com/ggandor/leap.nvim.git')
 vim.call('plug#end')
-vim.cmd('silent! colorscheme hybrid_material')
+-- vim.cmd('silent! colorscheme seoul256-light')
+vim.cmd('silent! colorscheme rose-pine')
+-- vim.cmd('silent! colorscheme hybrid_material')
 -- Some servers have issues with backup files, see #649
 vim.opt.backup = true
 vim.opt.writebackup = true
 vim.opt.sessionoptions:append("localoptions")
 vim.treesitter.language.register('python', 'someft')
+vim.o.runtimepath = vim.o.runtimepath..',/home/lr-2002/.config/nvim/lua'
 vim.wo.number = true
 vim.wo.relativenumber =true
 -- require('leap').create_default_mappings()
-require('fzf-lua').setup { 
-	fzf_bin = '~/fzf'
-
-} 
-
+-- local fzf = require('fzf-lua').setup { 
+-- 	fzf_bin = '~/fzf'
+--
+-- } 
+--
 
 -- 设置 vim-airline
 
@@ -72,13 +81,22 @@ vim.api.nvim_set_keymap('n', 'oe', "<cmd>lua require('dap').repl.open()<CR>", { 
 vim.api.nvim_set_keymap('n', 'ce', "<cmd>lua require('dap').repl.close()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'cd', "<cmd>lua require('dap').terminate()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'rd', "<cmd>lua require('dap').restart()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'zi', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'lb', "<cmd>lua require('fzf-lua').buffers()<CR>", { noremap = true, silent = true })
-
+-- vim.api.nvim_set_keymap('n', 'zi', "<cmd>lua require('fzf-lua').files()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', 'lb', "<cmd>lua require('fzf-lua').buffers()<CR>", { noremap = true, silent = true })
+--
 vim.keymap.set('n', '<C-Up>', ':resize -2<CR>', opts)
 vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', opts)
 vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', opts)
 vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', opts)
+-- Neo-tree settings for relative numbering
+require('neo-tree').setup({
+window = {
+	relativenumber = true
+},
+
+
+})
+vim.g.mapleader = ' ' 
 
 -----------------
 -- Visual mode --
@@ -87,7 +105,7 @@ require('aerial').setup({
   -- 配置是否自动打开 aerial 窗口
   on_attach = function(bufnr)
     -- 使用 <leader>a 打开或关闭 aerial 窗口
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'os', '<cmd>AerialToggle!<CR>', {})
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'os', '<cmd>AerialOpen!<CR>', {})
   end
 })
 
@@ -216,7 +234,7 @@ keyset("n", "<leader>ac", "<Plug>(coc-codeaction-cursor)", opts)
 keyset("n", "<leader>as", "<Plug>(coc-codeaction-source)", opts)
 -- Apply the most preferred quickfix action on the current line.
 keyset("n", "<leader>qf", "<Plug>(coc-fix-current)", opts)
-
+vim.api.nvim_set_keymap('n', 'K', ":call CocAction('doHover')<CR>", { noremap = true, silent = true })
 -- Remap keys for apply refactor code actions.
 keyset("n", "<leader>re", "<Plug>(coc-codeaction-refactor)", { silent = true })
 keyset("x", "<leader>r", "<Plug>(coc-codeaction-refactor-selected)", { silent = true })
@@ -297,20 +315,20 @@ dap = require('dap')
 dap_python = require('dap-python')
 dap.set_log_level('TRACE')
 dap_python.setup(os.getenv("CONDA_PREFIX") .. '/bin/python')
+print('using python is ' .. os.getenv("CONDA_PREFIX") .. '/bin/python')
+vim.g.python3_host_prog = os.getenv("CONDA_PREFIX") .. '/bin/python'
+vim.g.airline_python_binary = vim.g.python3_host_prog
+
 dap.configurations.python = {
   {
     type = 'python',
     request = 'launch',
     name = "Launch debug ",
     -- program = "${file}",
-    program = "/scratch2/mas/zhouziheng/ABC-s/train/generate_slot_with_mask/dynamicrafter/train_abstractNet_video_slot_with_mask_flatten_dynamicrafter_fourier_pos_emb_xianhao_for_sweep.py",
+    program = "${file}",
     pythonPath = function()
-      return "/scratch2/mas/zhouziheng/miniconda3/envs/dynamicrafter/bin/python"
-
+      return os.getenv("CONDA_PREFIX") .. '/bin/python'
     end,
-    args = {
-	"--wandb_config", "/scratch2/mas/zhouziheng/ABC-s/test_wandb.yaml"
-    }
     -- args = {
     --   "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
     --   "--dataset_type", "movi",
@@ -349,3 +367,5 @@ vim.opt.undodir = "~/.config/nvim/.undodir//"
 --
 -- save session and load 
 vim.cmd([[autocmd VimLeave * mksession! ~/.nvim_session]])
+require('config.hop')
+require('config.telescope')
