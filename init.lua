@@ -4,6 +4,7 @@ local vim = vim
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 Plug('https://github.com/folke/which-key.nvim.git')
+Plug('https://github.com/ojroques/nvim-osc52.git')
 Plug('https://github.com/echasnovski/mini.icons.git')
 Plug('https://github.com/rose-pine/neovim.git')
 Plug('stevearc/aerial.nvim')
@@ -69,10 +70,10 @@ vim.api.nvim_set_keymap('n', 'L', '$', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'bd', '<C-o>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', 'jj', '<C-\\><C-n>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<C-x>", "<cmd>split<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<C-v>", "<cmd>vsplit<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dt', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dc', "<cmd>lua require('dap').continue()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'do', "<cmd>lua require('dap').step_over()<CR>", { noremap = true, silent = true })
@@ -117,10 +118,9 @@ vim.api.nvim_set_keymap('n', 'ou', "<cmd>lua require('dapui').open()<CR>", { nor
 vim.api.nvim_set_keymap('n', 'cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'ls', "<cmd>Neotree<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'la', ":Neotree position=current<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ls', "<cmd>Neotree<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>la', ":Neotree position=current<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'nhl', "<cmd>nohlsearch<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'lj', ":buffer ", { noremap = true, silent = false })
 
 
 
@@ -317,7 +317,6 @@ dap.set_log_level('TRACE')
 dap_python.setup(os.getenv("CONDA_PREFIX") .. '/bin/python')
 print('using python is ' .. os.getenv("CONDA_PREFIX") .. '/bin/python')
 vim.g.python3_host_prog = os.getenv("CONDA_PREFIX") .. '/bin/python'
-vim.g.airline_python_binary = vim.g.python3_host_prog
 
 dap.configurations.python = {
   {
