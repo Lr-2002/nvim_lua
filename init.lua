@@ -71,8 +71,8 @@ vim.api.nvim_set_keymap('n', 'bd', '<C-o>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', 'jj', '<C-\\><C-n>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<C-x>", "<cmd>split<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<C-v>", "<cmd>vsplit<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-x>h", "<cmd>split<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-x>v", "<cmd>vsplit<CR>", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dt', "<cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'dc', "<cmd>lua require('dap').continue()<CR>", { noremap = true, silent = true })
@@ -110,23 +110,20 @@ require('aerial').setup({
   end
 })
 
-vim.api.nvim_set_keymap('n', 'os', '<cmd>AerialOpen<CR>', {})
+vim.api.nvim_set_keymap('n', '<leader>os', '<cmd>AerialOpen<CR>', {})
 -- Hint: start visual mode with the same area as the previous area and the same mode
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
 
-vim.api.nvim_set_keymap('n', 'ou', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ou', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ls', "<cmd>Neotree<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>la', ":Neotree position=current<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'nhl', "<cmd>nohlsearch<CR>", { noremap = true, silent = true })
 
 
-
-
-vim.api.nvim_set_keymap('n', 'ot', "<cmd>NERDTree<CR>", { noremap = true, silent = true })
 
 -- Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
 -- delays and poor user experience
