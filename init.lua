@@ -4,24 +4,35 @@ local vim = vim
 local Plug = vim.fn['plug#']
 vim.call('plug#begin')
 Plug('https://github.com/folke/which-key.nvim.git')
+-- ui 
+Plug('kristijanhusak/vim-hybrid-material')
+Plug('junegunn/seoul256.vim')
 Plug('https://github.com/ojroques/nvim-osc52.git')
 Plug('https://github.com/echasnovski/mini.icons.git')
 Plug('https://github.com/rose-pine/neovim.git')
 Plug('stevearc/aerial.nvim')
-Plug('ibhagwan/fzf-lua', {['branch']= 'main'})
+
+-- typst 
+Plug('williamboman/mason.nvim')
+Plug('williamboman/mason-lspconfig.nvim')
+Plug('neovim/nvim-lspconfig')
+Plug('chomosuke/typst-preview.nvim', {['tag']= 'v1.*'})
+Plug('kaarmu/typst.vim')
+
 Plug('nvim-lua/plenary.nvim')
+-- telescope 
 Plug('nvim-telescope/telescope.nvim', { ['tag']= '0.1.8' })
+Plug('https://github.com/nvim-telescope/telescope-live-grep-args.nvim.git')
+
 Plug('https://github.com/folke/todo-comments.nvim.git')
-Plug('https://github.com/kshenoy/vim-signature.git')
 Plug('nvim-neo-tree/neo-tree.nvim', { ['branch']= 'v3.x' })
-Plug("nvim-lua/plenary.nvim")
 Plug("nvim-tree/nvim-web-devicons") -- not strictly required, but recommended
 Plug("MunifTanjim/nui.nvim")
 Plug("terrortylor/nvim-comment")
-Plug('~/fzf')
 Plug('vim-airline/vim-airline')
 Plug('vim-airline/vim-airline-themes')
 Plug("kylechui/nvim-surround")
+-- debug
 Plug('mfussenegger/nvim-dap')
 Plug('mfussenegger/nvim-dap-python')
 Plug('rcarriga/nvim-dap-ui')
@@ -29,20 +40,25 @@ Plug('nvim-neotest/nvim-nio')
 Plug('phaazon/hop.nvim')
 Plug('terryma/vim-multiple-cursors')
 Plug('nvim-treesitter/nvim-treesitter', {['do']= 'TSUpdate'})
-Plug('https://github.com/junegunn/vim-easy-align.git')
-Plug('kristijanhusak/vim-hybrid-material')
-Plug('junegunn/seoul256.vim')
 Plug('neoclide/coc.nvim', {['branch'] ='release'})
-Plug('https://github.com/ggandor/leap.nvim.git')
+
+Plug('stevearc/dressing.nvim')
+-- Plug('MunifTanjim/nui.nvim')
+-- Plug('HakonHarnes/img-clip.nvim')
+-- Plug('zbirenbaum/copilot.lua')
+-- Plug('yetone/avante.nvim', {['branch']='main', ['do']= 'make' })
+Plug('Exafunction/codeium.vim', { ['branch']= 'main' })
+Plug('https://github.com/MeanderingProgrammer/render-markdown.nvim.git')
 vim.call('plug#end')
 -- vim.cmd('silent! colorscheme seoul256-light')
-vim.cmd('silent! colorscheme rose-pine')
+vim.cmd('silent! colorscheme rose-pine-dawn')
 -- vim.cmd('silent! colorscheme hybrid_material')
 -- Some servers have issues with backup files, see #649
 vim.opt.backup = true
 vim.opt.writebackup = true
+vim.opt.clipboard = 'unnamedplus'
 vim.opt.sessionoptions:append("localoptions")
-vim.treesitter.language.register('python', 'someft')
+vim.treesitter.language.register('python', 'someft', 'markdown')
 vim.o.runtimepath = vim.o.runtimepath..',/home/lr-2002/.config/nvim/lua'
 vim.wo.number = true
 vim.wo.relativenumber =true
@@ -53,6 +69,7 @@ vim.wo.relativenumber =true
 -- } 
 --
 
+-- require('avante_lib').load()
 -- 设置 vim-airline
 
 -- 自定义状态栏
@@ -68,7 +85,10 @@ vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true 
 vim.api.nvim_set_keymap('n', 'H', '^', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'L', '$', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'bd', '<C-o>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'bt', '<C-i>', { noremap = true, silent = true })
+
 vim.api.nvim_set_keymap('i', 'jj', '<ESC>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-BS>', '<C-W>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', 'jj', '<C-\\><C-n>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<C-x>h", "<cmd>split<CR>", { noremap = true, silent = true })
@@ -115,12 +135,14 @@ vim.api.nvim_set_keymap('n', '<leader>os', '<cmd>AerialOpen<CR>', {})
 vim.keymap.set('v', '<', '<gv', opts)
 vim.keymap.set('v', '>', '>gv', opts)
 
-vim.api.nvim_set_keymap('n', '<leader>ou', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cu', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>tu', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>uo', "<cmd>lua require('dapui').open()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>uc', "<cmd>lua require('dapui').close()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ut', "<cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', 'ls', "<cmd>ls<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ls', "<cmd>Neotree<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>la', ":Neotree position=current<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>b', ":Neotree toggle show buffers right<cr>", { noremap = true, silent = true })
+
 vim.api.nvim_set_keymap('n', 'nhl', "<cmd>nohlsearch<CR>", { noremap = true, silent = true })
 
 
@@ -308,49 +330,13 @@ keyset("n", "<space>k", ":<C-u>CocPrev<cr>", opts)
 -- Resume latest coc list
 keyset("n", "<space>p", ":<C-u>CocListResume<cr>", opts)
 
-
+-- debug 
 dap = require('dap')
 dap_python = require('dap-python')
 dap.set_log_level('TRACE')
 dap_python.setup(os.getenv("CONDA_PREFIX") .. '/bin/python')
 print('using python is ' .. os.getenv("CONDA_PREFIX") .. '/bin/python')
 vim.g.python3_host_prog = os.getenv("CONDA_PREFIX") .. '/bin/python'
-
-dap.configurations.python = {
-  {
-    type = 'python',
-    request = 'launch',
-    name = "Launch debug ",
-    -- program = "${file}",
-    program = "${file}",
-    pythonPath = function()
-      return os.getenv("CONDA_PREFIX") .. '/bin/python'
-    end,
-    -- args = {
-    --   "--log_path", "/scratch2/mas/zhouziheng/ABC-s/exp/generate_with_input_mask_dynamicrafter/bdd/image/fourier_pos_emb", 
-    --   "--dataset_type", "movi",
-    --   "--movi_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/movi/movi_c/train/image/**/*.npy",
-    --   "--decoder_config", "/scratch2/mas/zhouziheng/ABC-s/abstraction_model/generate_slot_with_mask_input/dynamicrafter/configs/training_512_v1.0/config_img.yaml",
-    --   "--decoder_ckpt_path", "/scratch2/mas/zhouziheng/DynamiCrafter/checkpoints/dynamicrafter_512_v1/model.ckpt",
-    --   "--image_mode", "False",
-    --   "--training_mode", "True",
-    --   "--model_cache_dir", "/scratch2/mas/zhouziheng/.cache",
-    --   "--bdd_data_path", "/scratch2/mas/zhouziheng/ABC-s/dataset/bdd100k/image",
-    --   "--lt_data_path", "/home/zhouziheng/scratch2_zzh/processed_lt_data",
-    --   "--use_dp", "False",
-    --   "--num_workers", "24",
-    --   "--batch_size", "1",
-    --   "--backward_batch_size", "1",
-    --   "--use_ref", "True",
-    --   "--slot_size", "1024",
-    --   "--enable_wandb", "False",
-    --   "--slot_method", "slot_query",
-    --   "--which_backbone", "pretrain_dino",
-    --   -- 可选的其他参数
-    -- },
-  },
-}
-
 require('dapui').setup()
 
 vim.fn.sign_define('DapBreakpoint', {text='🐞', texthl='', linehl='', numhl=''})
@@ -359,10 +345,16 @@ vim.o.ignorecase = true
 vim.opt.shell = "/bin/zsh"
 vim.opt.backupdir = "~/.config/nvim/.backup//"
 vim.opt.undodir = "~/.config/nvim/.undodir//"
--- load lua 
---
---
--- save session and load 
-vim.cmd([[autocmd VimLeave * mksession! ~/.nvim_session]])
+vim.opt.laststatus = 3 
+
+
+
 require('config.hop')
+
+require('config.mason')
+require('config.typst')
 require('config.telescope')
+-- require('config.avante')
+require('debug_config')
+require('config.codeium')
+require('config.day_night')
